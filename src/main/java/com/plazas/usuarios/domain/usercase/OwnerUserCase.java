@@ -25,4 +25,9 @@ public class OwnerUserCase implements IOwnerServicePort {
         owner.setPassword(passwordEncoder.encode(owner.getPassword()));
         ownerPersistencePort.saveOwner(owner);
     }
+
+    @Override
+    public Owner getRolFromOwner(Long id) {
+        return ownerPersistencePort.getRolFromOwner(id);
+    }
 }

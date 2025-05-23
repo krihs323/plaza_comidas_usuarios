@@ -12,4 +12,5 @@ public interface OwnerRequestMapper {
 
     Owner toOwner(OwnerRequest ownerRequest);
 
+
 }

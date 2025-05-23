@@ -4,10 +4,13 @@ import com.plazas.usuarios.domain.model.Owner;
 import com.plazas.usuarios.domain.spi.IOwnerPersistencePort;
 //import com.plazas.usuarios.infraestructure.exception.OwnerAlreadyExistException;
 import com.plazas.usuarios.infraestructure.exception.OwnerAlreadyExistException;
+import com.plazas.usuarios.infraestructure.exception.OwnerDoesNotExist;
 import com.plazas.usuarios.infraestructure.output.jpa.entity.OwnerEntity;
 import com.plazas.usuarios.infraestructure.output.jpa.mapper.OwnerEntityMapper;
 import com.plazas.usuarios.infraestructure.output.jpa.repository.IOwnerRepository;
 import lombok.RequiredArgsConstructor;
+
+import java.util.Optional;
 
 //@RequiredArgsConstructor
 public class OwnerJpaAdapter implements IOwnerPersistencePort {
@@ -29,4 +32,17 @@ public class OwnerJpaAdapter implements IOwnerPersistencePort {
         ownerRepository.save(ownerEntityMapper.toEntity(owner));
 
     }
+
+    @Override
+    public Owner getRolFromOwner(Long id) {
+
+        Optional<OwnerEntity> OwnerFound = ownerRepository.findById(id);
+        if(OwnerFound.isEmpty()){
+            throw new OwnerDoesNotExist("El propietario que intenta buscar no existe");
+        }
+
+        return ownerEntityMapper.toOwner(OwnerFound.orElseThrow());
+    }
+
+
 }

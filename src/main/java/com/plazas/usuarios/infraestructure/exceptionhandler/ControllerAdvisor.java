@@ -1,6 +1,7 @@
 package com.plazas.usuarios.infraestructure.exceptionhandler;
 
 import com.plazas.usuarios.infraestructure.exception.OwnerAlreadyExistException;
+import com.plazas.usuarios.infraestructure.exception.OwnerDoesNotExist;
 import com.plazas.usuarios.infraestructure.exception.OwnerValidationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,6 +45,13 @@ public class ControllerAdvisor {
     public ResponseEntity<Map<String, String>> handlerOwnerAlreadyexception(
             OwnerAlreadyExistException ex) {
         return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(Collections.singletonMap(MESSAGE, ex.getMessage()));
+    }
+
+    @ExceptionHandler(OwnerDoesNotExist.class)
+    public ResponseEntity<Map<String, String>> handlerOwnerDoesNotExist(
+            OwnerDoesNotExist ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(Collections.singletonMap(MESSAGE, ex.getMessage()));
     }
 

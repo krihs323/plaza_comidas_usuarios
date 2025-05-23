@@ -1,9 +1,13 @@
 package com.plazas.usuarios.infraestructure.imput.rest;
 
 import com.plazas.usuarios.application.dto.OwnerRequest;
+import com.plazas.usuarios.application.dto.OwnerResponse;
+import com.plazas.usuarios.application.dto.RolResponse;
 import com.plazas.usuarios.application.handler.IOwnerHandler;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
@@ -33,6 +37,20 @@ public class OwnerRestController {
         ownerHandler.saveOwner(ownerRequest);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
+
+    @Operation(summary = "Get a rol by its User")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Rol found",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = OwnerResponse.class))),
+            @ApiResponse(responseCode = "404", description = "Owner not found", content = @Content)
+    })
+    @GetMapping("/rol/{id}")
+    public ResponseEntity<RolResponse> getRolFromOwner(@Parameter(description = "Number of the user to be returned")
+                                                                 @PathVariable(name = "id") Long id) {
+        return ResponseEntity.ok(ownerHandler.getRolFromOwner(id));
+    }
+
+
 
 
 }

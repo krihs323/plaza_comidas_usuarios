@@ -12,6 +12,6 @@ public interface OwnerEntityMapper {
 
     OwnerEntity toEntity(Owner owner);
 
-    Owner toPokemon(OwnerEntity ownerEntity);
+    Owner toOwner(OwnerEntity ownerEntity);
 
 }
