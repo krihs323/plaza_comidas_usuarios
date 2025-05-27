@@ -1,12 +1,12 @@
 package com.plazas.usuarios.domain.model;
 
-import com.plazas.usuarios.infraestructure.exception.OwnerValidationException;
-import com.plazas.usuarios.infraestructure.output.jpa.entity.RolType;
+import com.plazas.usuarios.infraestructure.exception.UserValidationException;
+import com.plazas.usuarios.infraestructure.exceptionhandler.ExceptionResponse;
 
 import java.time.LocalDate;
 import java.time.Period;
 
-public class Owner {
+public class User {
 
     private String name;
     private String lastName;
@@ -15,9 +15,12 @@ public class Owner {
     private LocalDate birthDate;
     private String email;
     private String password;
-    private Integer rol;
+    private Role role;
 
-    public Owner(String name, String lastName, Long numberId, String phoneNumber, LocalDate birthDate, String email, String password) {
+    public User() {
+    }
+
+    public User(String name, String lastName, Long numberId, String phoneNumber, LocalDate birthDate, String email, String password, Role role) {
         this.name = name;
         this.lastName = lastName;
         this.numberId = numberId;
@@ -25,8 +28,10 @@ public class Owner {
         this.birthDate = calcAge(birthDate);
         this.email = email;
         this.password = password;
-        this.rol = RolType.OWNER.getValue();
+        this.role = role;
     }
+
+
 
 
     private LocalDate calcAge(LocalDate birthDate) {
@@ -34,7 +39,7 @@ public class Owner {
 
         years = Period.between(birthDate, LocalDate.now()).getYears();
         if (years < 18) {
-            throw new OwnerValidationException("El usuario no debe ser menor de edad");
+            throw new UserValidationException(ExceptionResponse.USER_VALIATION.getMessage());
         }
         return birthDate;
     }
@@ -95,11 +100,25 @@ public class Owner {
         this.password = password;
     }
 
-    public Integer getRol() {
-        return rol;
+    public Role getRole() {
+        return role;
     }
 
-    public void setRol(Integer rol) {
-        this.rol = rol;
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "name='" + name + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", numberId=" + numberId +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", birthDate=" + birthDate +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", role=" + role +
+                '}';
     }
 }

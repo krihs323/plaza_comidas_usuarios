@@ -1,4 +1,4 @@
-package com.plazas.usuarios.infraestructure.output.jpa.mapper;
+package com.plazas.usuarios.infraestructure.security.mapper;
 
 import com.plazas.usuarios.domain.model.User;
 import com.plazas.usuarios.infraestructure.output.jpa.entity.OwnerEntity;
@@ -9,9 +9,9 @@ import org.mapstruct.ReportingPolicy;
 @Mapper(componentModel = "spring",
         unmappedTargetPolicy = ReportingPolicy.IGNORE,
         unmappedSourcePolicy = ReportingPolicy.IGNORE)
-public interface OwnerEntityMapper {
+public interface UserDetailMapper {
 
-    @Mapping(source = "role", target = "role")
+    //@Mapping(source = "role", target = "role")
     OwnerEntity toEntity(User user);
 
     User toOwner(OwnerEntity ownerEntity);
