@@ -1,5 +1,7 @@
 package com.plazas.usuarios.application.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.plazas.usuarios.domain.model.Role;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Max;
@@ -33,6 +35,5 @@ public class OwnerRequest {
 
         //Debe estar encriptada
         private String password;
-
 
 }

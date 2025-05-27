@@ -1,7 +1,7 @@
 package com.plazas.usuarios.application.mapper;
 
 import com.plazas.usuarios.application.dto.OwnerRequest;
-import com.plazas.usuarios.domain.model.Owner;
+import com.plazas.usuarios.domain.model.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
 
@@ -10,7 +10,5 @@ import org.mapstruct.ReportingPolicy;
         unmappedSourcePolicy = ReportingPolicy.IGNORE)
 public interface OwnerRequestMapper {
 
-    Owner toOwner(OwnerRequest ownerRequest);
-
-
+    User toOwner(OwnerRequest ownerRequest);
 }

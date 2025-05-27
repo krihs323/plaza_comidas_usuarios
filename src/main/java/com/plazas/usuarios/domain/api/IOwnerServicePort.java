@@ -1,10 +1,12 @@
 package com.plazas.usuarios.domain.api;
 
-import com.plazas.usuarios.domain.model.Owner;
+import com.plazas.usuarios.domain.model.User;
 
 public interface IOwnerServicePort {
 
-    void saveOwner(Owner owner);
+    void saveOwner(User user);
 
-    Owner getRolFromOwner(Long id);
+    User getRolFromOwner(Long id);
+
+    User findByEmail(String email);
 }

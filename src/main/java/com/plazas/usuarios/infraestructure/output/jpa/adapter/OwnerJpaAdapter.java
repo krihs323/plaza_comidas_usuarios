@@ -1,18 +1,16 @@
 package com.plazas.usuarios.infraestructure.output.jpa.adapter;
 
-import com.plazas.usuarios.domain.model.Owner;
+import com.plazas.usuarios.domain.model.User;
 import com.plazas.usuarios.domain.spi.IOwnerPersistencePort;
-//import com.plazas.usuarios.infraestructure.exception.OwnerAlreadyExistException;
-import com.plazas.usuarios.infraestructure.exception.OwnerAlreadyExistException;
-import com.plazas.usuarios.infraestructure.exception.OwnerDoesNotExist;
+import com.plazas.usuarios.infraestructure.exception.UserAlreadyExistException;
+import com.plazas.usuarios.infraestructure.exception.UserDoesNotExist;
+import com.plazas.usuarios.infraestructure.exceptionhandler.ExceptionResponse;
 import com.plazas.usuarios.infraestructure.output.jpa.entity.OwnerEntity;
 import com.plazas.usuarios.infraestructure.output.jpa.mapper.OwnerEntityMapper;
 import com.plazas.usuarios.infraestructure.output.jpa.repository.IOwnerRepository;
-import lombok.RequiredArgsConstructor;
 
 import java.util.Optional;
 
-//@RequiredArgsConstructor
 public class OwnerJpaAdapter implements IOwnerPersistencePort {
 
     private final IOwnerRepository ownerRepository;
@@ -25,23 +23,33 @@ public class OwnerJpaAdapter implements IOwnerPersistencePort {
 
 
     @Override
-    public void saveOwner(Owner owner) {
-        if (ownerRepository.findByEmail(owner.getEmail()).isPresent()) {
-            throw new OwnerAlreadyExistException("El propietario ya fue creado con el correo: " + owner.getEmail());
+    public void saveOwner(User user) {
+        if (ownerRepository.findByEmail(user.getEmail()).isPresent()) {
+            throw new UserAlreadyExistException(ExceptionResponse.USER_VALIDATION_EXIST.getMessage() + user.getEmail());
         }
-        ownerRepository.save(ownerEntityMapper.toEntity(owner));
+        ownerRepository.save(ownerEntityMapper.toEntity(user));
 
     }
 
     @Override
-    public Owner getRolFromOwner(Long id) {
+    public User getRolFromOwner(Long id) {
 
-        Optional<OwnerEntity> OwnerFound = ownerRepository.findById(id);
-        if(OwnerFound.isEmpty()){
-            throw new OwnerDoesNotExist("El propietario que intenta buscar no existe");
+        Optional<OwnerEntity> ownerFound = ownerRepository.findById(id);
+        if(ownerFound.isEmpty()){
+            throw new UserDoesNotExist(ExceptionResponse.USER_VALIDATION_NOT_FOUND.getMessage());
         }
 
-        return ownerEntityMapper.toOwner(OwnerFound.orElseThrow());
+        return ownerEntityMapper.toOwner(ownerFound.orElseThrow());
+    }
+
+    @Override
+    public User findByEmail(String email) {
+        Optional<OwnerEntity> ownerFound = ownerRepository.findByEmail(email);
+        if(ownerFound.isEmpty()){
+            throw new UserDoesNotExist(ExceptionResponse.USER_VALIDATION_NOT_FOUND.getMessage());
+        }
+
+        return ownerEntityMapper.toOwner(ownerFound.orElseThrow());
     }
 
 

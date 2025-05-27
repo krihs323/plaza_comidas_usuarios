@@ -7,5 +7,5 @@ import lombok.Setter;
 @Setter
 public class RolResponse {
 
-    private Integer rol;
+    private String rol;
 }

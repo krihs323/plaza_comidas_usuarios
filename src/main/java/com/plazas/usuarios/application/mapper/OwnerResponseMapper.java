@@ -1,7 +1,7 @@
 package com.plazas.usuarios.application.mapper;
 
 import com.plazas.usuarios.application.dto.OwnerResponse;
-import com.plazas.usuarios.domain.model.Owner;
+import com.plazas.usuarios.domain.model.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
 
@@ -10,6 +10,6 @@ import org.mapstruct.ReportingPolicy;
         unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface OwnerResponseMapper {
 
-    OwnerResponse toResponse(Owner owner);
+    OwnerResponse toResponse(User user);
 
 }

@@ -8,4 +8,6 @@ import java.util.Optional;
 public interface IOwnerRepository extends JpaRepository<OwnerEntity, Long> {
 
     Optional<OwnerEntity> findByEmail(String email);
+
+
 }

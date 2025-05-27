@@ -1,15 +1,14 @@
 package com.plazas.usuarios.infraestructure.exceptionhandler;
 
-import com.plazas.usuarios.infraestructure.exception.OwnerAlreadyExistException;
-import com.plazas.usuarios.infraestructure.exception.OwnerDoesNotExist;
-import com.plazas.usuarios.infraestructure.exception.OwnerValidationException;
+import com.plazas.usuarios.infraestructure.exception.UserAlreadyExistException;
+import com.plazas.usuarios.infraestructure.exception.UserDoesNotExist;
+import com.plazas.usuarios.infraestructure.exception.UserValidationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.servlet.mvc.support.DefaultHandlerExceptionResolver;
 
 import java.util.Collections;
 import java.util.Map;
@@ -34,23 +33,23 @@ public class ControllerAdvisor {
                 .body(Collections.singletonMap(MESSAGE, ex.getMessage()));
     }
 
-    @ExceptionHandler(OwnerValidationException.class)
+    @ExceptionHandler(UserValidationException.class)
     public ResponseEntity<Map<String, String>> ownerValidation(
-            OwnerValidationException ex) {
+            UserValidationException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(Collections.singletonMap(MESSAGE, ex.getMessage()));
     }
 
-    @ExceptionHandler(OwnerAlreadyExistException.class)
+    @ExceptionHandler(UserAlreadyExistException.class)
     public ResponseEntity<Map<String, String>> handlerOwnerAlreadyexception(
-            OwnerAlreadyExistException ex) {
+            UserAlreadyExistException ex) {
         return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(Collections.singletonMap(MESSAGE, ex.getMessage()));
     }
 
-    @ExceptionHandler(OwnerDoesNotExist.class)
+    @ExceptionHandler(UserDoesNotExist.class)
     public ResponseEntity<Map<String, String>> handlerOwnerDoesNotExist(
-            OwnerDoesNotExist ex) {
+            UserDoesNotExist ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(Collections.singletonMap(MESSAGE, ex.getMessage()));
     }
