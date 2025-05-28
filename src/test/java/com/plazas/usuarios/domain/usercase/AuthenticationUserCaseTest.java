@@ -1,7 +1,7 @@
 package com.plazas.usuarios.domain.usercase;
 
 import com.plazas.usuarios.application.dto.AuthenticationRequest;
-import com.plazas.usuarios.domain.api.IOwnerServicePort;
+import com.plazas.usuarios.domain.api.IUserServicePort;
 import com.plazas.usuarios.domain.model.Role;
 import com.plazas.usuarios.domain.model.User;
 import com.plazas.usuarios.domain.spi.IAuthenticationPersistencePort;
@@ -19,7 +19,6 @@ import java.time.LocalDate;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 
 class AuthenticationUserCaseTest {
@@ -27,7 +26,7 @@ class AuthenticationUserCaseTest {
     @Mock
     private AuthenticationManager authenticationManager;
     @Mock
-    private IOwnerServicePort ownerServicePort;
+    private IUserServicePort ownerServicePort;
     @Mock
     private IAuthenticationPersistencePort authenticationPersistencePort;
 
@@ -59,9 +58,6 @@ class AuthenticationUserCaseTest {
         request.setEmail("123456");
 
         String tokenToTest = authenticationUserCase.authenticate(request);
-        System.out.println("tokenToTest = " + tokenToTest);
-        //assertEquals(tokenToTest, token);
-
 
     }
 }

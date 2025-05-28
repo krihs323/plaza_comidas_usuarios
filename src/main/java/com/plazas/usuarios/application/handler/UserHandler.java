@@ -1,21 +1,18 @@
 package com.plazas.usuarios.application.handler;
 
-import com.plazas.usuarios.application.dto.OwnerRequest;
 import com.plazas.usuarios.application.dto.RolResponse;
-import com.plazas.usuarios.application.mapper.OwnerRequestMapper;
 import com.plazas.usuarios.application.mapper.RolResponseMapper;
-import com.plazas.usuarios.domain.api.IOwnerServicePort;
-import com.plazas.usuarios.domain.model.Role;
+import com.plazas.usuarios.domain.api.IUserServicePort;
 import com.plazas.usuarios.domain.model.User;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserHandler implements IUserHandler {
 
-    private final IOwnerServicePort ownerServicePort;
+    private final IUserServicePort ownerServicePort;
     private final RolResponseMapper rolResponseMapper;
 
-    public UserHandler(IOwnerServicePort ownerServicePort, RolResponseMapper rolResponseMapper) {
+    public UserHandler(IUserServicePort ownerServicePort, RolResponseMapper rolResponseMapper) {
         this.ownerServicePort = ownerServicePort;
         this.rolResponseMapper = rolResponseMapper;
     }

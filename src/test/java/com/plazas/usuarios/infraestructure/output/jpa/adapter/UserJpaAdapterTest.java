@@ -5,9 +5,9 @@ import com.plazas.usuarios.domain.model.User;
 import com.plazas.usuarios.infraestructure.exception.UserAlreadyExistException;
 import com.plazas.usuarios.infraestructure.exception.UserDoesNotExist;
 import com.plazas.usuarios.infraestructure.exceptionhandler.ExceptionResponse;
-import com.plazas.usuarios.infraestructure.output.jpa.entity.OwnerEntity;
-import com.plazas.usuarios.infraestructure.output.jpa.mapper.OwnerEntityMapper;
-import com.plazas.usuarios.infraestructure.output.jpa.repository.IOwnerRepository;
+import com.plazas.usuarios.infraestructure.output.jpa.entity.UserEntity;
+import com.plazas.usuarios.infraestructure.output.jpa.mapper.UserEntityMapper;
+import com.plazas.usuarios.infraestructure.output.jpa.repository.IUserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -26,13 +26,13 @@ import static org.mockito.Mockito.*;
 class UserJpaAdapterTest {
 
     @Mock
-    private IOwnerRepository ownerRepository;
+    private IUserRepository ownerRepository;
 
     @Mock
-    private OwnerEntityMapper ownerEntityMapper;
+    private UserEntityMapper userEntityMapper;
 
     @InjectMocks
-    private OwnerJpaAdapter ownerJpaAdapter;
+    private UserJpaAdapter userJpaAdapter;
 
     @BeforeEach
     void setUp() {
@@ -56,33 +56,33 @@ class UserJpaAdapterTest {
 
     }
 
-    private static OwnerEntity getOwnerEntity() {
+    private static UserEntity getOwnerEntity() {
         LocalDate birthDate = LocalDate.of(1989,3,23);
-        OwnerEntity ownerEntity = new OwnerEntity();
-        ownerEntity.setId(1L);
-        ownerEntity.setEmail("cris@hotmail.com");
-        ownerEntity.setName("cristian");
-        ownerEntity.setLastName("botina");
-        ownerEntity.setPassword("123456");
-        ownerEntity.setRole(Role.ADMIN);
-        ownerEntity.setBirthDate(birthDate);
-        ownerEntity.setPhoneNumber("+523155465");
-        return ownerEntity;
+        UserEntity userEntity = new UserEntity();
+        userEntity.setId(1L);
+        userEntity.setEmail("cris@hotmail.com");
+        userEntity.setName("cristian");
+        userEntity.setLastName("botina");
+        userEntity.setPassword("123456");
+        userEntity.setRole(Role.ADMIN);
+        userEntity.setBirthDate(birthDate);
+        userEntity.setPhoneNumber("+523155465");
+        return userEntity;
     }
 
     @Test
     @DisplayName("Save owner should fail with OwnerAlreadyExistException")
     void saveOwnerAlreadyExist() {
 
-        OwnerEntity ownerEntity = new OwnerEntity();
-        ownerEntity.setName("Cristian");
-        ownerEntity.setLastName("Botina");
-        ownerEntity.setEmail("cristian@hotmail.com");
-        ownerEntity.setId(1L);
+        UserEntity userEntity = new UserEntity();
+        userEntity.setName("Cristian");
+        userEntity.setLastName("Botina");
+        userEntity.setEmail("cristian@hotmail.com");
+        userEntity.setId(1L);
 
-        Mockito.when(ownerRepository.findByEmail("cristian@hotmail.com")).thenReturn(Optional.of(ownerEntity));
+        Mockito.when(ownerRepository.findByEmail("cristian@hotmail.com")).thenReturn(Optional.of(userEntity));
 
-        OwnerEntity savedJpaEntity = new OwnerEntity();
+        UserEntity savedJpaEntity = new UserEntity();
         savedJpaEntity.setId(1L);
         savedJpaEntity.setEmail("cristian@hotmail.com");
         savedJpaEntity.setName("Cristian");
@@ -94,7 +94,7 @@ class UserJpaAdapterTest {
                 birthDate, "cristian@hotmail.com", "34567", Role.OWNER, 1L);
 
         UserAlreadyExistException exception = assertThrows(UserAlreadyExistException.class, () -> {
-            ownerJpaAdapter.saveOwner(user);
+            userJpaAdapter.saveOwner(user);
         });
 
 
@@ -108,16 +108,16 @@ class UserJpaAdapterTest {
     @DisplayName("Get rol from Owner")
     void getRolFromOwner(){
 
-        OwnerEntity ownerEntity = getOwnerEntity();
+        UserEntity userEntity = getOwnerEntity();
 
-        Optional<OwnerEntity> ownerMock = Optional.of(ownerEntity);
+        Optional<UserEntity> ownerMock = Optional.of(userEntity);
 
         Mockito.when(ownerRepository.findById(anyLong())).thenReturn(ownerMock);
 
         User userMock = getUser();
-        Mockito.when(ownerEntityMapper.toOwner(any())).thenReturn(userMock);
+        Mockito.when(userEntityMapper.toOwner(any())).thenReturn(userMock);
 
-        User userExpected = ownerJpaAdapter.getRolFromOwner(anyLong());
+        User userExpected = userJpaAdapter.getRolFromOwner(anyLong());
 
         assertEquals(userExpected.getEmail(), userMock.getEmail());
 
@@ -131,7 +131,7 @@ class UserJpaAdapterTest {
         Mockito.when(ownerRepository.findById(anyLong())).thenReturn(Optional.empty());
 
         UserDoesNotExist exception = assertThrows(UserDoesNotExist.class, () ->
-            ownerJpaAdapter.getRolFromOwner(anyLong())
+            userJpaAdapter.getRolFromOwner(anyLong())
         );
 
         String messageValidation = ExceptionResponse.USER_VALIDATION_NOT_FOUND.getMessage();
@@ -143,16 +143,16 @@ class UserJpaAdapterTest {
     @Test
     @DisplayName("Get rol by email")
     void findByEmail(){
-        OwnerEntity ownerEntity = getOwnerEntity();
+        UserEntity userEntity = getOwnerEntity();
 
-        Optional<OwnerEntity> ownerMock = Optional.of(ownerEntity);
+        Optional<UserEntity> ownerMock = Optional.of(userEntity);
 
         Mockito.when(ownerRepository.findByEmail(anyString())).thenReturn(ownerMock);
 
         User userMock = getUser();
-        Mockito.when(ownerEntityMapper.toOwner(any())).thenReturn(userMock);
+        Mockito.when(userEntityMapper.toOwner(any())).thenReturn(userMock);
 
-        User userExpected = ownerJpaAdapter.findByEmail(anyString());
+        User userExpected = userJpaAdapter.findByEmail(anyString());
 
         assertEquals(userExpected.getEmail(), userMock.getEmail());
     }
@@ -164,7 +164,7 @@ class UserJpaAdapterTest {
         Mockito.when(ownerRepository.findByEmail(anyString())).thenReturn(Optional.empty());
 
         UserDoesNotExist exception = assertThrows(UserDoesNotExist.class, () ->
-                ownerJpaAdapter.findByEmail(anyString())
+                userJpaAdapter.findByEmail(anyString())
         );
 
         String messageValidation = ExceptionResponse.USER_VALIDATION_NOT_FOUND.getMessage();

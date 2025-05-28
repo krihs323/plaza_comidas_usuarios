@@ -1,16 +1,16 @@
 package com.plazas.usuarios.domain.usercase;
 
-import com.plazas.usuarios.domain.api.IOwnerServicePort;
+import com.plazas.usuarios.domain.api.IUserServicePort;
 import com.plazas.usuarios.domain.model.User;
-import com.plazas.usuarios.domain.spi.IOwnerPersistencePort;
+import com.plazas.usuarios.domain.spi.IUserPersistencePort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-public class OwnerUserCase implements IOwnerServicePort {
+public class UserUserCase implements IUserServicePort {
 
-    private final IOwnerPersistencePort ownerPersistencePort;
+    private final IUserPersistencePort ownerPersistencePort;
     private final PasswordEncoder passwordEncoder;
 
-    public OwnerUserCase(IOwnerPersistencePort ownerPersistencePort, PasswordEncoder passwordEncoder) {
+    public UserUserCase(IUserPersistencePort ownerPersistencePort, PasswordEncoder passwordEncoder) {
         this.ownerPersistencePort = ownerPersistencePort;
         this.passwordEncoder = passwordEncoder;
     }

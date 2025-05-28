@@ -1,6 +1,6 @@
 package com.plazas.usuarios.infraestructure.security;
 
-import com.plazas.usuarios.infraestructure.output.jpa.repository.IOwnerRepository;
+import com.plazas.usuarios.infraestructure.output.jpa.repository.IUserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,7 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @RequiredArgsConstructor
 public class AplicationConfig {
 
-    private final IOwnerRepository ownerRepository;
+    private final IUserRepository ownerRepository;
 
     @Bean
     public UserDetailsService userDetailsService(){

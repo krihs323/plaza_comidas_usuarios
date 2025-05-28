@@ -2,7 +2,7 @@ package com.plazas.usuarios.infraestructure.security.adapter;
 
 import com.plazas.usuarios.domain.model.User;
 import com.plazas.usuarios.domain.spi.IAuthenticationPersistencePort;
-import com.plazas.usuarios.infraestructure.output.jpa.mapper.OwnerEntityMapper;
+import com.plazas.usuarios.infraestructure.output.jpa.mapper.UserEntityMapper;
 import com.plazas.usuarios.infraestructure.security.JwtService;
 import lombok.RequiredArgsConstructor;
 
@@ -10,10 +10,10 @@ import lombok.RequiredArgsConstructor;
 public class AuthenticationJpaAdapter implements IAuthenticationPersistencePort {
 
     private final JwtService jwtService;
-    private final OwnerEntityMapper ownerEntityMapper;
+    private final UserEntityMapper userEntityMapper;
 
     @Override
     public String authenticate(User user) {
-        return jwtService.generateToken(ownerEntityMapper.toEntity(user));
+        return jwtService.generateToken(userEntityMapper.toEntity(user));
     }
 }

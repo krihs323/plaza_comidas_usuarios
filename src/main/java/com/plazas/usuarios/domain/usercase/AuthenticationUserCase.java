@@ -2,7 +2,7 @@ package com.plazas.usuarios.domain.usercase;
 
 import com.plazas.usuarios.application.dto.AuthenticationRequest;
 import com.plazas.usuarios.domain.api.IAuthenticationServicePort;
-import com.plazas.usuarios.domain.api.IOwnerServicePort;
+import com.plazas.usuarios.domain.api.IUserServicePort;
 import com.plazas.usuarios.domain.model.User;
 import com.plazas.usuarios.domain.spi.IAuthenticationPersistencePort;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +14,7 @@ public class AuthenticationUserCase implements IAuthenticationServicePort {
 
 
     private final AuthenticationManager authenticationManager;
-    private final IOwnerServicePort ownerServicePort;
+    private final IUserServicePort ownerServicePort;
     private final IAuthenticationPersistencePort authenticationPersistencePort;
 
     @Override
