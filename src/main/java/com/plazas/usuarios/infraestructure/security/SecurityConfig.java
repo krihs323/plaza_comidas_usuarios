@@ -36,14 +36,6 @@ public class SecurityConfig {
             "/webjars/**",
             "/swagger-ui.html"};
 
-//    @Bean
-//    SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-//        http
-//             .csrf(AbstractHttpConfigurer::disable)
-//             .authorizeHttpRequests(auth -> auth.anyRequest().permitAll());
-//        return http.build();
-//
-//    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -52,6 +44,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(req ->
                         req.requestMatchers(WHITE_LIST_URL).permitAll()
                                 .requestMatchers("/api/user/owner/**").hasAuthority("ADMIN")
+                                .requestMatchers("/api/user/rol/**").hasAnyAuthority("ADMIN", "OWNER", "EMPLOYEE")
                                 .requestMatchers("/api/user/employee/**").hasAuthority("OWNER")
                                 .anyRequest()
                                 .authenticated()

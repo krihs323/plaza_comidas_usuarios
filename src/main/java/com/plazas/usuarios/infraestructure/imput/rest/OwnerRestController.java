@@ -16,7 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(path = "/api/user/owner")
+@RequestMapping(path = "/api/user")
 //@RequiredArgsConstructor
 public class OwnerRestController {
 
@@ -37,17 +37,17 @@ public class OwnerRestController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @Operation(summary = "Get a rol by its User")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Rol found",
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = OwnerResponse.class))),
-            @ApiResponse(responseCode = "404", description = "Owner not found", content = @Content)
-    })
-    @GetMapping("/rol/{id}")
-    public ResponseEntity<RolResponse> getRolFromOwner(@Parameter(description = "Number of the user to be returned")
-                                                                 @PathVariable(name = "id") Long id) {
-        return ResponseEntity.ok(ownerHandler.getRolFromOwner(id));
-    }
+//    @Operation(summary = "Get a rol by its User")
+//    @ApiResponses(value = {
+//            @ApiResponse(responseCode = "200", description = "Rol found",
+//                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = OwnerResponse.class))),
+//            @ApiResponse(responseCode = "404", description = "Owner not found", content = @Content)
+//    })
+//    @GetMapping("/rol/{id}")
+//    public ResponseEntity<RolResponse> getRolFromOwner(@Parameter(description = "Number of the user to be returned")
+//                                                                 @PathVariable(name = "id") Long id) {
+//        return ResponseEntity.ok(ownerHandler.getRolFromOwner(id));
+//    }
 
 
 
