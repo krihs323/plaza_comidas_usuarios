@@ -38,7 +38,7 @@ class UserUserCaseTest {
     private static User getUser() {
         LocalDate birthDate = LocalDate.of(1989,3,23);
         User userMock = new User("Cristian", "Botina", 123456L, "3155828235",
-                birthDate, "cris@hotmail.com", "34567", Role.OWNER);
+                birthDate, "cris@hotmail.com", "34567", Role.OWNER, 1L);
         return userMock;
     }
 
@@ -65,7 +65,7 @@ class UserUserCaseTest {
 
         UserValidationException exception = assertThrows(UserValidationException.class, () -> {
             User user = new User("Cristian", "Botina", 123456L, "3155828235",
-                    birthDate, "cris@hotmail.com", "34567", Role.ADMIN);
+                    birthDate, "cris@hotmail.com", "34567", Role.ADMIN, 1L);
             //ownerUserCase.saveOwner(owner);
         });
         assertEquals("El usuario no debe ser menor de edad", exception.getMessage());

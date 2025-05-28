@@ -46,7 +46,7 @@ class AuthenticationUserCaseTest {
 
         LocalDate birthDate = LocalDate.of(1989,3,23);
         User userMock = new User("Cristian", "Botina", 123456L, "3155828235",
-                birthDate, "cris@hotmail.com", "34567", Role.OWNER);
+                birthDate, "cris@hotmail.com", "34567", Role.OWNER, 1L);
 
         Mockito.when(ownerServicePort.findByEmail(anyString())).thenReturn(userMock);
 

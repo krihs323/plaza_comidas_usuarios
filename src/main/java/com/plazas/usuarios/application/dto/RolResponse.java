@@ -8,4 +8,6 @@ import lombok.Setter;
 public class RolResponse {
 
     private String rol;
+
+    private Long idUser;
 }

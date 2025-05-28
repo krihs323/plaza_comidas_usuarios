@@ -33,6 +33,7 @@ public class OwnerHandler implements IOwnerHandler {
         ownerServicePort.saveOwner(user);
     }
 
+    //TODO REMOVER
     @Override
     public RolResponse getRolFromOwner(Long id) {
         User user = ownerServicePort.getRolFromOwner(id);
@@ -44,6 +45,12 @@ public class OwnerHandler implements IOwnerHandler {
         User user = ownerRequestMapper.toOwner(ownerRequest);
         user.setRole(Role.EMPLOYEE);
         ownerServicePort.saveOwner(user);
+    }
+
+    @Override
+    public RolResponse getRolFromEmail(String email) {
+        User user = ownerServicePort.findByEmail(email);
+        return rolResponseMapper.toResponse(user);
     }
 
 }

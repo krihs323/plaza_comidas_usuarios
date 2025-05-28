@@ -12,5 +12,6 @@ import org.mapstruct.ReportingPolicy;
 public interface RolResponseMapper {
 
     @Mapping(source = "role", target = "rol")
+    @Mapping(source = "id", target = "idUser")
     RolResponse toResponse(User user);
 }

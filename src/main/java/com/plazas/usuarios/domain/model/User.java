@@ -8,6 +8,7 @@ import java.time.Period;
 
 public class User {
 
+
     private String name;
     private String lastName;
     private Long numberId;
@@ -16,11 +17,13 @@ public class User {
     private String email;
     private String password;
     private Role role;
+    private Long id;
 
     public User() {
     }
 
-    public User(String name, String lastName, Long numberId, String phoneNumber, LocalDate birthDate, String email, String password, Role role) {
+
+    public User(String name, String lastName, Long numberId, String phoneNumber, LocalDate birthDate, String email, String password, Role role, Long id) {
         this.name = name;
         this.lastName = lastName;
         this.numberId = numberId;
@@ -29,10 +32,8 @@ public class User {
         this.email = email;
         this.password = password;
         this.role = role;
+        this.id = id;
     }
-
-
-
 
     private LocalDate calcAge(LocalDate birthDate) {
         int years;
@@ -108,6 +109,14 @@ public class User {
         this.role = role;
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -119,6 +128,7 @@ public class User {
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", role=" + role +
+                ", id=" + id +
                 '}';
     }
 }

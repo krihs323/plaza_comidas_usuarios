@@ -13,4 +13,5 @@ public interface IOwnerHandler {
 
     void saveEmployee(OwnerRequest ownerRequest);
 
+    RolResponse getRolFromEmail(String email);
 }
