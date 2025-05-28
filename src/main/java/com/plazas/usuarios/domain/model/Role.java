@@ -2,5 +2,5 @@ package com.plazas.usuarios.domain.model;
 
 public enum Role {
 
-    ADMIN, OWNER, EMPLOYEE
+    ADMIN, OWNER, CUSTOMER, EMPLOYEE
 }

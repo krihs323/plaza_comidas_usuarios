@@ -4,7 +4,7 @@ import com.plazas.usuarios.application.dto.OwnerRequest;
 import com.plazas.usuarios.application.dto.RolResponse;
 import com.plazas.usuarios.application.mapper.OwnerRequestMapper;
 import com.plazas.usuarios.application.mapper.RolResponseMapper;
-import com.plazas.usuarios.domain.api.IOwnerServicePort;
+import com.plazas.usuarios.domain.api.IUserServicePort;
 import com.plazas.usuarios.domain.model.Role;
 import com.plazas.usuarios.domain.model.User;
 import org.springframework.stereotype.Service;
@@ -15,12 +15,12 @@ import org.springframework.stereotype.Service;
 public class OwnerHandler implements IOwnerHandler {
 
     //@Autowired
-    private final IOwnerServicePort ownerServicePort;
+    private final IUserServicePort userServicePort;
     private final RolResponseMapper rolResponseMapper;
     private final OwnerRequestMapper ownerRequestMapper;
 
-    public OwnerHandler(IOwnerServicePort ownerServicePort, RolResponseMapper rolResponseMapper, OwnerRequestMapper ownerRequestMapper) {
-        this.ownerServicePort = ownerServicePort;
+    public OwnerHandler(IUserServicePort userServicePort, RolResponseMapper rolResponseMapper, OwnerRequestMapper ownerRequestMapper) {
+        this.userServicePort = userServicePort;
         this.rolResponseMapper = rolResponseMapper;
         this.ownerRequestMapper = ownerRequestMapper;
     }
@@ -30,13 +30,13 @@ public class OwnerHandler implements IOwnerHandler {
         //Implementa los casos de uso que se comunican con Dominio y Persistencia a traves de puertos
         User user = ownerRequestMapper.toOwner(ownerRequest);
         user.setRole(Role.OWNER);
-        ownerServicePort.saveOwner(user);
+        userServicePort.saveOwner(user);
     }
 
     //TODO REMOVER
     @Override
     public RolResponse getRolFromOwner(Long id) {
-        User user = ownerServicePort.getRolFromOwner(id);
+        User user = userServicePort.getRolFromOwner(id);
         return rolResponseMapper.toResponse(user);
     }
 
@@ -44,12 +44,12 @@ public class OwnerHandler implements IOwnerHandler {
     public void saveEmployee(OwnerRequest ownerRequest) {
         User user = ownerRequestMapper.toOwner(ownerRequest);
         user.setRole(Role.EMPLOYEE);
-        ownerServicePort.saveOwner(user);
+        userServicePort.saveOwner(user);
     }
 
     @Override
     public RolResponse getRolFromEmail(String email) {
-        User user = ownerServicePort.findByEmail(email);
+        User user = userServicePort.findByEmail(email);
         return rolResponseMapper.toResponse(user);
     }
 

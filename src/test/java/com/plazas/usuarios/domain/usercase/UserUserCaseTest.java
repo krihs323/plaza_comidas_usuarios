@@ -2,7 +2,7 @@ package com.plazas.usuarios.domain.usercase;
 
 import com.plazas.usuarios.domain.model.Role;
 import com.plazas.usuarios.domain.model.User;
-import com.plazas.usuarios.domain.spi.IOwnerPersistencePort;
+import com.plazas.usuarios.domain.spi.IUserPersistencePort;
 import com.plazas.usuarios.infraestructure.exception.UserValidationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -23,12 +23,12 @@ import static org.mockito.Mockito.*;
 class UserUserCaseTest {
 
     @Mock
-    private IOwnerPersistencePort ownerPersistencePort;
+    private IUserPersistencePort ownerPersistencePort;
     @Mock
     private PasswordEncoder passwordEncoder;
 
     @InjectMocks
-    private OwnerUserCase ownerUserCase;
+    private UserUserCase ownerUserCase;
 
     @BeforeEach
     void setUp() {
@@ -37,9 +37,8 @@ class UserUserCaseTest {
 
     private static User getUser() {
         LocalDate birthDate = LocalDate.of(1989,3,23);
-        User userMock = new User("Cristian", "Botina", 123456L, "3155828235",
+        return new User("Cristian", "Botina", 123456L, "3155828235",
                 birthDate, "cris@hotmail.com", "34567", Role.OWNER, 1L);
-        return userMock;
     }
 
     @Test
@@ -99,6 +98,16 @@ class UserUserCaseTest {
         assertEquals(userExpected.getEmail(), userMock.getEmail());
     }
 
+    //HU08 Crear Cuenta Cliente
+    @Test
+    @DisplayName("Save client should save")
+    void saveCustomer() {
+        doNothing().when(ownerPersistencePort).saveOwner(any());
+        User user = getUser();
+        user.setRole(Role.CUSTOMER);
+        ownerUserCase.saveOwner(user);
+        verify(ownerPersistencePort).saveOwner(user);
+    }
 
 
 
