@@ -45,7 +45,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(req ->
                         req.requestMatchers(WHITE_LIST_URL).permitAll()
                                 .requestMatchers("/api/user/owner/**").hasAuthority("ADMIN")
-                                .requestMatchers("/api/user/rol/**").hasAnyAuthority("ADMIN", "OWNER", "EMPLOYEE")
+                                .requestMatchers("/api/user/rol/**").hasAnyAuthority("ADMIN", "OWNER", "EMPLOYEE", "CUSTOMER")
                                 .requestMatchers("/api/user/employee/**").hasAuthority("OWNER")
                                 .anyRequest()
                                 .authenticated()
