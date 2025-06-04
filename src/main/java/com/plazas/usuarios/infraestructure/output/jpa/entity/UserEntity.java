@@ -40,6 +40,8 @@ public class UserEntity implements UserDetails {
     private String email;
     @Column(name = "clave")
     private String password;
+    @Column(name = "id_restaurante_empleado")
+    private Long idRestaurantEmployee;
 
 
     @Enumerated(EnumType.STRING)

@@ -10,7 +10,6 @@ import org.mapstruct.ReportingPolicy;
         unmappedSourcePolicy = ReportingPolicy.IGNORE)
 public interface UserDetailMapper {
 
-    //@Mapping(source = "role", target = "role")
     UserEntity toEntity(User user);
 
     User toOwner(UserEntity userEntity);

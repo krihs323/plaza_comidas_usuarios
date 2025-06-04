@@ -26,7 +26,7 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(value = OwnerRestController.class
+@WebMvcTest(value = UserRestController.class
         , excludeAutoConfiguration = SecurityAutoConfiguration.class
 )
 //@SpringBootTest

@@ -8,7 +8,6 @@ import java.time.Period;
 
 public class User {
 
-
     private String name;
     private String lastName;
     private Long numberId;
@@ -18,12 +17,12 @@ public class User {
     private String password;
     private Role role;
     private Long id;
+    private Long idRestaurantEmployee;
 
     public User() {
     }
 
-
-    public User(String name, String lastName, Long numberId, String phoneNumber, LocalDate birthDate, String email, String password, Role role, Long id) {
+    public User(String name, String lastName, Long numberId, String phoneNumber, LocalDate birthDate, String email, String password, Role role, Long id, Long idRestaurantEmployee) {
         this.name = name;
         this.lastName = lastName;
         this.numberId = numberId;
@@ -33,6 +32,7 @@ public class User {
         this.password = password;
         this.role = role;
         this.id = id;
+        this.idRestaurantEmployee = idRestaurantEmployee;
     }
 
     private LocalDate calcAge(LocalDate birthDate) {
@@ -117,18 +117,11 @@ public class User {
         this.id = id;
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "name='" + name + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", numberId=" + numberId +
-                ", phoneNumber='" + phoneNumber + '\'' +
-                ", birthDate=" + birthDate +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", role=" + role +
-                ", id=" + id +
-                '}';
+    public Long getIdRestaurantEmployee() {
+        return idRestaurantEmployee;
+    }
+
+    public void setIdRestaurantEmployee(Long idRestaurantEmployee) {
+        this.idRestaurantEmployee = idRestaurantEmployee;
     }
 }
