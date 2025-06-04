@@ -17,16 +17,11 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
-//@RequiredArgsConstructor
 public class BeanConfiguration {
 
     private final IUserRepository userRepository;
     private final UserEntityMapper userEntityMapper;
-
     private final PasswordEncoder passwordEncoder;
-
-    //inyeccion de servicios para autenticacion
-    //private final IAuthenticationPersistencePort authenticationPersistencePort;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
 
@@ -40,15 +35,14 @@ public class BeanConfiguration {
 
     @Bean
     public IUserPersistencePort userPersistencePort(){
-        return new UserJpaAdapter(userRepository, userEntityMapper);
+        return new UserJpaAdapter(userRepository, userEntityMapper, passwordEncoder);
     }
 
     @Bean
     public IUserServicePort userServicePort(){
-        return new UserUserCase(userPersistencePort(), passwordEncoder);
+        return new UserUserCase(userPersistencePort());
     }
 
-    //Autenticacion
     @Bean
     public IAuthenticationPersistencePort authenticationPersistencePort(){
         return new AuthenticationJpaAdapter(jwtService, userEntityMapper);
@@ -56,9 +50,7 @@ public class BeanConfiguration {
 
     @Bean
     public IAuthenticationServicePort authenticationServicePort(){
-        return new AuthenticationUserCase(authenticationManager,  userServicePort(), authenticationPersistencePort());
+        return new AuthenticationUserCase(authenticationManager,  authenticationPersistencePort(), userPersistencePort());
     }
-
-
 
 }

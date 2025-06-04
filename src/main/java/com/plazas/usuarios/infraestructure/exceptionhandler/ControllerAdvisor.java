@@ -1,5 +1,6 @@
 package com.plazas.usuarios.infraestructure.exceptionhandler;
 
+import com.plazas.usuarios.domain.exception.UserCaseValidationException;
 import com.plazas.usuarios.infraestructure.exception.UserAlreadyExistException;
 import com.plazas.usuarios.infraestructure.exception.UserDoesNotExist;
 import com.plazas.usuarios.infraestructure.exception.UserValidationException;
@@ -13,7 +14,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import java.util.Collections;
 import java.util.Map;
 
-//@ControllerAdvice(basePackages = {"com.plazas.usuarios.infraestructure"})
 @ControllerAdvice
 public class ControllerAdvisor {
 
@@ -40,6 +40,7 @@ public class ControllerAdvisor {
                 .body(Collections.singletonMap(MESSAGE, ex.getMessage()));
     }
 
+
     @ExceptionHandler(UserAlreadyExistException.class)
     public ResponseEntity<Map<String, String>> handlerOwnerAlreadyexception(
             UserAlreadyExistException ex) {
@@ -51,6 +52,13 @@ public class ControllerAdvisor {
     public ResponseEntity<Map<String, String>> handlerOwnerDoesNotExist(
             UserDoesNotExist ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(Collections.singletonMap(MESSAGE, ex.getMessage()));
+    }
+
+    @ExceptionHandler(UserCaseValidationException.class)
+    public ResponseEntity<Map<String, String>> handlerUserCaseValidation(
+            UserCaseValidationException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(Collections.singletonMap(MESSAGE, ex.getMessage()));
     }
 

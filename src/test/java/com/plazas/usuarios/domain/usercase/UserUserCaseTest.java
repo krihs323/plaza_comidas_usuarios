@@ -1,9 +1,13 @@
 package com.plazas.usuarios.domain.usercase;
 
+import com.plazas.usuarios.domain.exception.ExceptionValidationsResponse;
+import com.plazas.usuarios.domain.exception.UserCaseValidationException;
 import com.plazas.usuarios.domain.model.Role;
 import com.plazas.usuarios.domain.model.User;
 import com.plazas.usuarios.domain.spi.IUserPersistencePort;
+import com.plazas.usuarios.infraestructure.exception.UserAlreadyExistException;
 import com.plazas.usuarios.infraestructure.exception.UserValidationException;
+import com.plazas.usuarios.infraestructure.exceptionhandler.ExceptionResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,9 +15,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.springframework.security.crypto.password.PasswordEncoder;
-
 import java.time.LocalDate;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -23,51 +26,44 @@ import static org.mockito.Mockito.*;
 class UserUserCaseTest {
 
     @Mock
-    private IUserPersistencePort ownerPersistencePort;
-    @Mock
-    private PasswordEncoder passwordEncoder;
+    private IUserPersistencePort userPersistencePort;
+
 
     @InjectMocks
-    private UserUserCase ownerUserCase;
+    private UserUserCase userUserCase;
+
+    private User user;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
+
+        LocalDate birthDate = LocalDate.of(1989,3,23);
+        user = new User("Cristian", "Botina", 123456L, "3155828235",
+                birthDate, "cris@hotmail.com", "34567", Role.OWNER, 1L, null);
     }
 
-    private static User getUser() {
-        LocalDate birthDate = LocalDate.of(1989,3,23);
-        return new User("Cristian", "Botina", 123456L, "3155828235",
-                birthDate, "cris@hotmail.com", "34567", Role.OWNER, 1L);
-    }
 
     @Test
     @DisplayName("Save owner should save")
     void saveOwner() {
-        doNothing().when(ownerPersistencePort).saveOwner(any());
-        //Mockito.when(passwordEncoder.encode(any())).thenReturn(anyString());
-
-        User user = getUser();
-
-        ownerUserCase.saveOwner(user);
-        verify(ownerPersistencePort).saveOwner(user);
-
+        doNothing().when(userPersistencePort).saveOwner(any());
+        userUserCase.saveOwner(user);
+        verify(userPersistencePort).saveOwner(user);
     }
 
     @Test
     @DisplayName("Save owner should fail with OwnerValidationException")
     void testErrorWhenIsNotAdult(){
-        doNothing().when(ownerPersistencePort).saveOwner(any());
-        //Mockito.when(passwordEncoder.encode(any())).thenReturn(any());
+        doNothing().when(userPersistencePort).saveOwner(any());
 
         LocalDate birthDate = LocalDate.of(2020,3,23);
 
         UserValidationException exception = assertThrows(UserValidationException.class, () -> {
-            User user = new User("Cristian", "Botina", 123456L, "3155828235",
-                    birthDate, "cris@hotmail.com", "34567", Role.ADMIN, 1L);
-            //ownerUserCase.saveOwner(owner);
+            new User("Cristian", "Botina", 123456L, "3155828235",
+                    birthDate, "cris@hotmail.com", "34567", Role.ADMIN, 1L, null);
         });
-        assertEquals("El usuario no debe ser menor de edad", exception.getMessage());
+        assertEquals(ExceptionValidationsResponse.USER_VALIATION_AGE.getMessage(), exception.getMessage());
 
     }
 
@@ -75,40 +71,167 @@ class UserUserCaseTest {
     @DisplayName("Get rol by owner")
     void getRolFromOwner() {
 
-        User userMock = getUser();
-
-        Mockito.when(ownerPersistencePort.getRolFromOwner(anyLong())).thenReturn(userMock);
-
-        User userExpected = ownerUserCase.getRolFromOwner(anyLong());
-        assertEquals(userExpected.getEmail(), userMock.getEmail());
+        Mockito.when(userPersistencePort.getRolFromOwner(anyLong())).thenReturn(user);
+        User userExpected = userUserCase.getRolFromOwner(anyLong());
+        assertEquals(userExpected.getEmail(), user.getEmail());
 
     }
-
-
 
     @Test
     @DisplayName("Get user by email")
     void findByEmail() {
 
-        User userMock = getUser();
+        Mockito.when(userPersistencePort.findByEmail(anyString())).thenReturn(Optional.of(user));
 
-        Mockito.when(ownerPersistencePort.findByEmail(anyString())).thenReturn(userMock);
+        UserAlreadyExistException exception = assertThrows(UserAlreadyExistException.class, () ->
+            userUserCase.findByEmail(anyString())
+        );
 
-        User userExpected = ownerUserCase.findByEmail(anyString());
-        assertEquals(userExpected.getEmail(), userMock.getEmail());
+        assertEquals(ExceptionResponse.USER_VALIDATION_EXIST.getMessage(), exception.getMessage());
     }
 
-    //HU08 Crear Cuenta Cliente
     @Test
-    @DisplayName("Save client should save")
-    void saveCustomer() {
-        doNothing().when(ownerPersistencePort).saveOwner(any());
-        User user = getUser();
-        user.setRole(Role.CUSTOMER);
-        ownerUserCase.saveOwner(user);
-        verify(ownerPersistencePort).saveOwner(user);
+    @DisplayName("Save employee should save")
+    void saveEmployee() {
+        doNothing().when(userPersistencePort).saveOwner(any());
+        userUserCase.saveEmployee(user);
+        verify(userPersistencePort).saveOwner(user);
     }
 
+    @Test
+    @DisplayName("Save employee should dont save")
+    void saveEmployeeVWhenUserAlreadyExist() {
+        Mockito.when(userPersistencePort.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
+        Mockito.when(userPersistencePort.encodePassword(user.getPassword())).thenReturn(anyString());
+
+        UserAlreadyExistException exception = assertThrows(UserAlreadyExistException.class, () -> {
+            userUserCase.saveEmployee(user);
+        });
+        assertEquals(ExceptionResponse.USER_VALIDATION_EXIST.getMessage() + user.getEmail(), exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("Should return error when is invalid email in Employee")
+    void saveEmployeeInvalidEmail() {
+
+        user.setEmail("email.@");
+        UserCaseValidationException exception = assertThrows(UserCaseValidationException.class, () ->
+            userUserCase.saveEmployee(user)
+        );
+        assertEquals(ExceptionValidationsResponse.USER_VALIDATION_EMAIL.getMessage(), exception.getMessage());
+
+        user.setEmail("");
+        UserCaseValidationException exception2 = assertThrows(UserCaseValidationException.class, () ->
+            userUserCase.saveEmployee(user)
+        );
+        assertEquals(ExceptionValidationsResponse.USER_VALIDATION_EMAIL.getMessage(), exception2.getMessage());
+    }
+
+    @Test
+    @DisplayName("Should return error when is invalid name in Employee")
+    void saveEmployeeInvalidName() {
+
+        user.setName("");
+        UserCaseValidationException exception2 = assertThrows(UserCaseValidationException.class, () ->
+                userUserCase.saveEmployee(user)
+        );
+        assertEquals(ExceptionValidationsResponse.USER_VALIATION_NAME.getMessage(), exception2.getMessage());
+    }
+
+    @Test
+    @DisplayName("Should return error when is invalid last name in Employee")
+    void saveEmployeeInvalidLastName() {
+
+        user.setLastName("");
+        UserCaseValidationException exception = assertThrows(UserCaseValidationException.class, () ->
+                userUserCase.saveEmployee(user)
+        );
+        assertEquals(ExceptionValidationsResponse.USER_VALIDATION_LAST_NAME.getMessage(), exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("Should return error when is invalid number id in Employee")
+    void saveEmployeeInvalidNumberId() {
+
+        user.setNumberId(null);
+        UserCaseValidationException exception = assertThrows(UserCaseValidationException.class, () ->
+                userUserCase.saveEmployee(user)
+        );
+        assertEquals(ExceptionValidationsResponse.USER_VALIDATION_NUMBER_ID.getMessage(), exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("Should return error when is invalid phone number in Employee when is greater than 13")
+    void saveEmployeeInvalidTelephone() {
+
+        user.setPhoneNumber("+57315584842343");
+        UserCaseValidationException exception = assertThrows(UserCaseValidationException.class, () ->
+                userUserCase.saveEmployee(user)
+        );
+        assertEquals(ExceptionValidationsResponse.USER_VALIDATION_TELEPHONE.getMessage(), exception.getMessage());
+    }
+
+
+    @Test
+    @DisplayName("Should return error when is invalid email in User")
+    void saveUserInvalidEmail() {
+
+        user.setEmail("email.@");
+        UserCaseValidationException exception = assertThrows(UserCaseValidationException.class, () ->
+                userUserCase.saveOwner(user)
+        );
+        assertEquals(ExceptionValidationsResponse.USER_VALIDATION_EMAIL.getMessage(), exception.getMessage());
+
+        user.setEmail("");
+        UserCaseValidationException exception2 = assertThrows(UserCaseValidationException.class, () ->
+                userUserCase.saveOwner(user)
+        );
+        assertEquals(ExceptionValidationsResponse.USER_VALIDATION_EMAIL.getMessage(), exception2.getMessage());
+    }
+
+    @Test
+    @DisplayName("Should return error when is invalid name in User")
+    void saveUserInvalidName() {
+
+        user.setName("");
+        UserCaseValidationException exception2 = assertThrows(UserCaseValidationException.class, () ->
+                userUserCase.saveOwner(user)
+        );
+        assertEquals(ExceptionValidationsResponse.USER_VALIATION_NAME.getMessage(), exception2.getMessage());
+    }
+
+    @Test
+    @DisplayName("Should return error when is invalid last name in User")
+    void saveUserInvalidLastName() {
+
+        user.setLastName("");
+        UserCaseValidationException exception = assertThrows(UserCaseValidationException.class, () ->
+                userUserCase.saveOwner(user)
+        );
+        assertEquals(ExceptionValidationsResponse.USER_VALIDATION_LAST_NAME.getMessage(), exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("Should return error when is invalid number id in User")
+    void saveUserInvalidNumberId() {
+
+        user.setNumberId(null);
+        UserCaseValidationException exception = assertThrows(UserCaseValidationException.class, () ->
+                userUserCase.saveOwner(user)
+        );
+        assertEquals(ExceptionValidationsResponse.USER_VALIDATION_NUMBER_ID.getMessage(), exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("Should return error when is invalid phone number in User when is greater than 13")
+    void saveUserInvalidTelephone() {
+
+        user.setPhoneNumber("+57315584842343");
+        UserCaseValidationException exception = assertThrows(UserCaseValidationException.class, () ->
+                userUserCase.saveOwner(user)
+        );
+        assertEquals(ExceptionValidationsResponse.USER_VALIDATION_TELEPHONE.getMessage(), exception.getMessage());
+    }
 
 
 }

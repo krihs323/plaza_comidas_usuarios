@@ -1,10 +1,12 @@
 package com.plazas.usuarios.infraestructure.security;
 
+import com.plazas.usuarios.domain.model.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -16,7 +18,8 @@ import java.util.function.Function;
 @Service
 public class JwtService {
 
-    private static final String SECRET_KEY = "e3f1a9c4b8d2e7f6a1b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5\n";
+    @Value("${security.token}")
+    private String token;
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -27,21 +30,22 @@ public class JwtService {
         return claimsResolver.apply(claims);
     }
 
-    public String generateToken(UserDetails userDetails) {
-        return generateToken(new HashMap<>(), userDetails);
+    public String generateToken(UserDetails userDetails, User user) {
+        return generateToken(new HashMap<>(), userDetails, user);
     }
 
     public String generateToken(
             Map<String, Object> extraClaims,
-            UserDetails userDetails
+            UserDetails userDetails,
+            User user
     ) {
 
         Optional<String> roles = userDetails.getAuthorities().stream()
                 .findFirst()
                 .map(GrantedAuthority::getAuthority);
         extraClaims.put("role", roles.orElseThrow());
-
-        //return buildToken(extraClaims, userDetails, jwtExpiration);
+        extraClaims.put("idUuser", user.getId());
+        extraClaims.put("idRestaurantEmployee", user.getIdRestaurantEmployee());
         return Jwts
                 .builder()
                 .setClaims(extraClaims)
@@ -50,10 +54,6 @@ public class JwtService {
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
-
-
-
-
     }
 
     public boolean isTokenValid(String token, UserDetails userDetails) {
@@ -80,7 +80,7 @@ public class JwtService {
     }
 
     private Key getSignInKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
+        byte[] keyBytes = Decoders.BASE64.decode(token);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 }

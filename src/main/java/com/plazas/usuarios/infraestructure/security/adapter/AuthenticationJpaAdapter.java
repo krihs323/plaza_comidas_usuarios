@@ -14,6 +14,6 @@ public class AuthenticationJpaAdapter implements IAuthenticationPersistencePort 
 
     @Override
     public String authenticate(User user) {
-        return jwtService.generateToken(userEntityMapper.toEntity(user));
+        return jwtService.generateToken(userEntityMapper.toEntity(user), user);
     }
 }

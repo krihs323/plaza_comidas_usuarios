@@ -29,11 +29,9 @@ public class OwnerHandler implements IOwnerHandler {
     public void saveOwner(OwnerRequest ownerRequest) {
         //Implementa los casos de uso que se comunican con Dominio y Persistencia a traves de puertos
         User user = ownerRequestMapper.toOwner(ownerRequest);
-        user.setRole(Role.OWNER);
         userServicePort.saveOwner(user);
     }
 
-    //TODO REMOVER
     @Override
     public RolResponse getRolFromOwner(Long id) {
         User user = userServicePort.getRolFromOwner(id);
@@ -43,8 +41,7 @@ public class OwnerHandler implements IOwnerHandler {
     @Override
     public void saveEmployee(OwnerRequest ownerRequest) {
         User user = ownerRequestMapper.toOwner(ownerRequest);
-        user.setRole(Role.EMPLOYEE);
-        userServicePort.saveOwner(user);
+        userServicePort.saveEmployee(user);
     }
 
     @Override

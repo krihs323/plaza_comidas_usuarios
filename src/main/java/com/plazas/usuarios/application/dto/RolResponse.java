@@ -10,4 +10,8 @@ public class RolResponse {
     private String rol;
 
     private Long idUser;
+
+    private Long idRestaurantEmployee;
+
+    private String phoneNumber;
 }
