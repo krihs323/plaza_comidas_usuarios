@@ -64,6 +64,18 @@ public class UserRestController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
+    @Operation(summary = "Update user as Owner")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Owner updated", content = @Content),
+            @ApiResponse(responseCode = "400", description = "Owner bad request", content = @Content)
+    })
+    @PutMapping("/owner/updateRestaurant/{userId}")
+    public ResponseEntity<?> updateOwnerRestaurant(@Parameter(description = "Id of the user to be updated") @PathVariable Long userId,
+                                                   @RequestBody UserUpdateRequest userUpdateRequest) {
+        ownerHandler.updateOwnerRestaurant(userId, userUpdateRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
     @Operation(summary = "Add a new employee")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Employee created", content = @Content),
@@ -86,6 +98,13 @@ public class UserRestController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
+    //TODO Documentacion - Ajustado
+    @Operation(summary = "Login into small square system")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Loguin successful", content = @Content),
+            @ApiResponse(responseCode = "403", description = "Error during the login process", content = @Content),
+            @ApiResponse(responseCode = "400", description = "Bad request", content = @Content)
+    })
     @PostMapping("/authenticate/")
     public ResponseEntity<AuthenticationResponse> authenticate(
             @RequestBody AuthenticationRequest request

@@ -1,5 +1,6 @@
 package com.plazas.usuarios.infraestructure.security;
 
+import com.plazas.usuarios.domain.model.Role;
 import com.plazas.usuarios.domain.model.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -82,5 +83,23 @@ public class JwtService {
     private Key getSignInKey() {
         byte[] keyBytes = Decoders.BASE64.decode(token);
         return Keys.hmacShaKeyFor(keyBytes);
+    }
+
+    public User extractUser(String jwtAuthorizationHeader) {
+        Claims claims = extractAllClaims(jwtAuthorizationHeader);
+
+        String role = (String) claims.get("role");
+        Integer idUser = (Integer) claims.get("idUuser");
+        Integer idRestaurantEmployee = (Integer) claims.get("idRestaurantEmployee");
+
+        User user = new User();
+        user.setRole(Role.valueOf(role));
+        if(idUser!=null){
+            user.setId(Long.valueOf(idUser));
+        }
+        if(idRestaurantEmployee!=null){
+            user.setIdRestaurantEmployee(Long.valueOf(idRestaurantEmployee));
+        }
+        return user;
     }
 }

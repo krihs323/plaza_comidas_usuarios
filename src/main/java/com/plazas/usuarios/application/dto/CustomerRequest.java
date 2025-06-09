@@ -1,8 +1,6 @@
 package com.plazas.usuarios.application.dto;
 
 import jakarta.validation.constraints.Digits;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -26,7 +24,5 @@ public class CustomerRequest {
     private String email;
 
     private String password;
-
-    private String role;
 
 }

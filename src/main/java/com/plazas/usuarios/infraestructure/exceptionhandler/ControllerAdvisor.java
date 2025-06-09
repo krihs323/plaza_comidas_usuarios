@@ -1,9 +1,6 @@
 package com.plazas.usuarios.infraestructure.exceptionhandler;
 
-import com.plazas.usuarios.domain.exception.UserCaseValidationException;
-import com.plazas.usuarios.infraestructure.exception.UserAlreadyExistException;
-import com.plazas.usuarios.infraestructure.exception.UserDoesNotExist;
-import com.plazas.usuarios.infraestructure.exception.UserValidationException;
+import com.plazas.usuarios.domain.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -59,6 +56,13 @@ public class ControllerAdvisor {
     public ResponseEntity<Map<String, String>> handlerUserCaseValidation(
             UserCaseValidationException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(Collections.singletonMap(MESSAGE, ex.getMessage()));
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<Map<String, String>> authenticationHandlerException(
+            UserCaseValidationException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body(Collections.singletonMap(MESSAGE, ex.getMessage()));
     }
 

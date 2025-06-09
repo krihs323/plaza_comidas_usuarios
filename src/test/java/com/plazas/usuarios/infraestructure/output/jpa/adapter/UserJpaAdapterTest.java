@@ -2,8 +2,8 @@ package com.plazas.usuarios.infraestructure.output.jpa.adapter;
 
 import com.plazas.usuarios.domain.model.Role;
 import com.plazas.usuarios.domain.model.User;
-import com.plazas.usuarios.infraestructure.exception.UserDoesNotExist;
-import com.plazas.usuarios.infraestructure.exceptionhandler.ExceptionResponse;
+import com.plazas.usuarios.domain.exception.UserDoesNotExist;
+import com.plazas.usuarios.domain.exception.ExceptionResponse;
 import com.plazas.usuarios.infraestructure.output.jpa.entity.UserEntity;
 import com.plazas.usuarios.infraestructure.output.jpa.mapper.UserEntityMapper;
 import com.plazas.usuarios.infraestructure.output.jpa.repository.IUserRepository;
@@ -73,7 +73,7 @@ class UserJpaAdapterTest {
     void saveOwner() {
         when(ownerRepository.save(any())).thenReturn(any());
 
-        userJpaAdapter.saveOwner(user);
+        userJpaAdapter.save(user);
 
         verify(ownerRepository, never()).save(userEntity);
 
@@ -86,10 +86,10 @@ class UserJpaAdapterTest {
         Optional<UserEntity> ownerMock = Optional.of(userEntity);
 
         Mockito.when(ownerRepository.findById(anyLong())).thenReturn(ownerMock);
-        Mockito.when(userEntityMapper.toOwner(any())).thenReturn(user);
-        User userExpected = userJpaAdapter.getRolFromOwner(anyLong());
+        Mockito.when(userEntityMapper.toUser(any())).thenReturn(user);
+        Optional<User> userExpected = userJpaAdapter.getRolFromUser(anyLong());
 
-        assertEquals(userExpected.getEmail(), user.getEmail());
+        assertEquals(userExpected.get().getEmail(), user.getEmail());
     }
 
     @Test
@@ -98,12 +98,9 @@ class UserJpaAdapterTest {
 
         Mockito.when(ownerRepository.findById(anyLong())).thenReturn(Optional.empty());
 
-        UserDoesNotExist exception = assertThrows(UserDoesNotExist.class, () ->
-            userJpaAdapter.getRolFromOwner(anyLong())
-        );
+        Optional<User> userResponse =  userJpaAdapter.getRolFromUser(anyLong());
 
-        String messageValidation = ExceptionResponse.USER_VALIDATION_NOT_FOUND.getMessage();
-        assertTrue(exception.getMessage().contains(messageValidation));
+        assertTrue(userResponse.isEmpty());
 
     }
 
@@ -115,7 +112,7 @@ class UserJpaAdapterTest {
 
         Mockito.when(ownerRepository.findByEmail(anyString())).thenReturn(ownerMock);
 
-        Mockito.when(userEntityMapper.toOwner(any())).thenReturn(user);
+        Mockito.when(userEntityMapper.toUser(any())).thenReturn(user);
 
         Optional<User> userExpected = userJpaAdapter.findByEmail(anyString());
 
@@ -133,7 +130,7 @@ class UserJpaAdapterTest {
         assertEquals(password, passwordResponse);
     }
 
-    //@Test
+    @Test
     @DisplayName("Should encode Password")
     void encodePassword(){
 

@@ -2,19 +2,18 @@ package com.plazas.usuarios.application.handler;
 
 import com.plazas.usuarios.application.dto.OwnerRequest;
 import com.plazas.usuarios.application.dto.RolResponse;
+import com.plazas.usuarios.application.dto.UserUpdateRequest;
 import com.plazas.usuarios.application.mapper.OwnerRequestMapper;
 import com.plazas.usuarios.application.mapper.RolResponseMapper;
 import com.plazas.usuarios.domain.api.IUserServicePort;
-import com.plazas.usuarios.domain.model.Role;
 import com.plazas.usuarios.domain.model.User;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
-//@RequiredArgsConstructor
-//@Transactional
+@Transactional
 public class OwnerHandler implements IOwnerHandler {
 
-    //@Autowired
     private final IUserServicePort userServicePort;
     private final RolResponseMapper rolResponseMapper;
     private final OwnerRequestMapper ownerRequestMapper;
@@ -27,20 +26,19 @@ public class OwnerHandler implements IOwnerHandler {
 
     @Override
     public void saveOwner(OwnerRequest ownerRequest) {
-        //Implementa los casos de uso que se comunican con Dominio y Persistencia a traves de puertos
-        User user = ownerRequestMapper.toOwner(ownerRequest);
+        User user = ownerRequestMapper.toUser(ownerRequest);
         userServicePort.saveOwner(user);
     }
 
     @Override
     public RolResponse getRolFromOwner(Long id) {
-        User user = userServicePort.getRolFromOwner(id);
+        User user = userServicePort.getRolFromUser(id);
         return rolResponseMapper.toResponse(user);
     }
 
     @Override
     public void saveEmployee(OwnerRequest ownerRequest) {
-        User user = ownerRequestMapper.toOwner(ownerRequest);
+        User user = ownerRequestMapper.toUser(ownerRequest);
         userServicePort.saveEmployee(user);
     }
 
@@ -48,6 +46,12 @@ public class OwnerHandler implements IOwnerHandler {
     public RolResponse getRolFromEmail(String email) {
         User user = userServicePort.findByEmail(email);
         return rolResponseMapper.toResponse(user);
+    }
+
+    @Override
+    public void updateOwnerRestaurant(Long userId, UserUpdateRequest userUpdateRequest) {
+        User user = ownerRequestMapper.toUser(userUpdateRequest);
+        userServicePort.updateUser(userId, user);
     }
 
 }

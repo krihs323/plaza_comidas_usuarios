@@ -5,9 +5,9 @@ import com.plazas.usuarios.domain.exception.UserCaseValidationException;
 import com.plazas.usuarios.domain.model.Role;
 import com.plazas.usuarios.domain.model.User;
 import com.plazas.usuarios.domain.spi.IUserPersistencePort;
-import com.plazas.usuarios.infraestructure.exception.UserAlreadyExistException;
-import com.plazas.usuarios.infraestructure.exception.UserValidationException;
-import com.plazas.usuarios.infraestructure.exceptionhandler.ExceptionResponse;
+import com.plazas.usuarios.domain.exception.UserAlreadyExistException;
+import com.plazas.usuarios.domain.exception.UserValidationException;
+import com.plazas.usuarios.domain.exception.ExceptionResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -47,22 +47,22 @@ class UserUserCaseTest {
     @Test
     @DisplayName("Save owner should save")
     void saveOwner() {
-        doNothing().when(userPersistencePort).saveOwner(any());
+        doNothing().when(userPersistencePort).save(any());
         userUserCase.saveOwner(user);
-        verify(userPersistencePort).saveOwner(user);
+        verify(userPersistencePort).save(user);
     }
 
     @Test
     @DisplayName("Save owner should fail with OwnerValidationException")
     void testErrorWhenIsNotAdult(){
-        doNothing().when(userPersistencePort).saveOwner(any());
+        doNothing().when(userPersistencePort).save(any());
 
         LocalDate birthDate = LocalDate.of(2020,3,23);
 
-        UserValidationException exception = assertThrows(UserValidationException.class, () -> {
+        UserValidationException exception = assertThrows(UserValidationException.class, () ->
             new User("Cristian", "Botina", 123456L, "3155828235",
-                    birthDate, "cris@hotmail.com", "34567", Role.ADMIN, 1L, null);
-        });
+                    birthDate, "cris@hotmail.com", "34567", Role.ADMIN, 1L, null)
+        );
         assertEquals(ExceptionValidationsResponse.USER_VALIATION_AGE.getMessage(), exception.getMessage());
 
     }
@@ -71,8 +71,8 @@ class UserUserCaseTest {
     @DisplayName("Get rol by owner")
     void getRolFromOwner() {
 
-        Mockito.when(userPersistencePort.getRolFromOwner(anyLong())).thenReturn(user);
-        User userExpected = userUserCase.getRolFromOwner(anyLong());
+        Mockito.when(userPersistencePort.getRolFromUser(anyLong())).thenReturn(Optional.of(user));
+        User userExpected = userUserCase.getRolFromUser(anyLong());
         assertEquals(userExpected.getEmail(), user.getEmail());
 
     }
@@ -93,9 +93,16 @@ class UserUserCaseTest {
     @Test
     @DisplayName("Save employee should save")
     void saveEmployee() {
-        doNothing().when(userPersistencePort).saveOwner(any());
+
+        User userOwner = new User();
+        userOwner.setIdRestaurantEmployee(27L);
+        Mockito.when(userPersistencePort.findByEmail(anyString())).thenReturn(Optional.empty());
+        Mockito.when(userPersistencePort.encodePassword(anyString())).thenReturn("123456");
+        Mockito.when(userPersistencePort.getUseAuth()).thenReturn(userOwner);
+
+        doNothing().when(userPersistencePort).save(user);
         userUserCase.saveEmployee(user);
-        verify(userPersistencePort).saveOwner(user);
+        verify(userPersistencePort).save(user);
     }
 
     @Test
@@ -104,9 +111,9 @@ class UserUserCaseTest {
         Mockito.when(userPersistencePort.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
         Mockito.when(userPersistencePort.encodePassword(user.getPassword())).thenReturn(anyString());
 
-        UserAlreadyExistException exception = assertThrows(UserAlreadyExistException.class, () -> {
-            userUserCase.saveEmployee(user);
-        });
+        UserAlreadyExistException exception = assertThrows(UserAlreadyExistException.class, () ->
+            userUserCase.saveEmployee(user)
+        );
         assertEquals(ExceptionResponse.USER_VALIDATION_EXIST.getMessage() + user.getEmail(), exception.getMessage());
     }
 
@@ -231,6 +238,32 @@ class UserUserCaseTest {
                 userUserCase.saveOwner(user)
         );
         assertEquals(ExceptionValidationsResponse.USER_VALIDATION_TELEPHONE.getMessage(), exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("Save employee should save")
+    void saveCustomer() {
+        user.setRole(null);
+        Mockito.when(userPersistencePort.encodePassword(user.getPassword())).thenReturn(anyString());
+        Mockito.when(userPersistencePort.findByEmail(user.getEmail())).thenReturn(Optional.empty());
+
+        doNothing().when(userPersistencePort).save(user);
+        userUserCase.saveCustomer(user);
+        verify(userPersistencePort).save(user);
+    }
+
+    @Test
+    @DisplayName("Save employee should not save when user exist")
+    void saveCustomerWhenCustomerAlreadyExist() {
+        user.setRole(null);
+        Mockito.when(userPersistencePort.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
+        Mockito.when(userPersistencePort.encodePassword(user.getPassword())).thenReturn(anyString());
+
+        UserAlreadyExistException exception = assertThrows(UserAlreadyExistException.class, () ->
+                userUserCase.saveCustomer(user)
+        );
+        assertEquals(ExceptionResponse.USER_VALIDATION_EXIST.getMessage() + user.getEmail(), exception.getMessage());
+
     }
 
 

@@ -1,7 +1,7 @@
 package com.plazas.usuarios.domain.model;
 
-import com.plazas.usuarios.infraestructure.exception.UserValidationException;
-import com.plazas.usuarios.infraestructure.exceptionhandler.ExceptionResponse;
+import com.plazas.usuarios.domain.exception.UserValidationException;
+import com.plazas.usuarios.domain.exception.ExceptionResponse;
 
 import java.time.LocalDate;
 import java.time.Period;

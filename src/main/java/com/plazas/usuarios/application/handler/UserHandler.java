@@ -20,7 +20,7 @@ public class UserHandler implements IUserHandler {
 
     @Override
     public RolResponse getRolFromOwner(Long id) {
-        User user = ownerServicePort.getRolFromOwner(id);
+        User user = ownerServicePort.getRolFromUser(id);
         return rolResponseMapper.toResponse(user);
     }
 

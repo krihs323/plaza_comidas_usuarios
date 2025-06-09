@@ -11,6 +11,7 @@ import com.plazas.usuarios.infraestructure.output.jpa.mapper.UserEntityMapper;
 import com.plazas.usuarios.infraestructure.output.jpa.repository.IUserRepository;
 import com.plazas.usuarios.infraestructure.security.JwtService;
 import com.plazas.usuarios.infraestructure.security.adapter.AuthenticationJpaAdapter;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,18 +25,20 @@ public class BeanConfiguration {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
+    private final HttpServletRequest httpServletRequest;
 
-    public BeanConfiguration(IUserRepository userRepository, UserEntityMapper userEntityMapper, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, JwtService jwtService) {
+    public BeanConfiguration(IUserRepository userRepository, UserEntityMapper userEntityMapper, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, JwtService jwtService, HttpServletRequest httpServletRequest) {
         this.userRepository = userRepository;
         this.userEntityMapper = userEntityMapper;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
+        this.httpServletRequest = httpServletRequest;
     }
 
     @Bean
     public IUserPersistencePort userPersistencePort(){
-        return new UserJpaAdapter(userRepository, userEntityMapper, passwordEncoder);
+        return new UserJpaAdapter(userRepository, userEntityMapper, passwordEncoder, httpServletRequest, jwtService);
     }
 
     @Bean
@@ -45,12 +48,12 @@ public class BeanConfiguration {
 
     @Bean
     public IAuthenticationPersistencePort authenticationPersistencePort(){
-        return new AuthenticationJpaAdapter(jwtService, userEntityMapper);
+        return new AuthenticationJpaAdapter(jwtService, userEntityMapper, authenticationManager);
     }
 
     @Bean
     public IAuthenticationServicePort authenticationServicePort(){
-        return new AuthenticationUserCase(authenticationManager,  authenticationPersistencePort(), userPersistencePort());
+        return new AuthenticationUserCase(authenticationPersistencePort(), userPersistencePort());
     }
 
 }

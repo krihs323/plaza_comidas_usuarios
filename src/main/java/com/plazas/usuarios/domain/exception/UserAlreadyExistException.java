@@ -1,4 +1,4 @@
-package com.plazas.usuarios.infraestructure.exception;
+package com.plazas.usuarios.domain.exception;
 
 public class UserAlreadyExistException extends RuntimeException {
 

@@ -5,4 +5,6 @@ import com.plazas.usuarios.domain.model.User;
 public interface IAuthenticationPersistencePort {
 
     String authenticate(User user);
+
+    void autenticate(String email, String password);
 }

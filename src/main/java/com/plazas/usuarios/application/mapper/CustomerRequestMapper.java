@@ -11,5 +11,5 @@ import org.mapstruct.ReportingPolicy;
         unmappedSourcePolicy = ReportingPolicy.IGNORE)
 public interface CustomerRequestMapper {
 
-    User toOwner(CustomerRequest customerRequest);
+    User toUser(CustomerRequest customerRequest);
 }

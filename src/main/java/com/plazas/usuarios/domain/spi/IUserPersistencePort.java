@@ -6,11 +6,13 @@ import java.util.Optional;
 
 public interface IUserPersistencePort {
 
-    void saveOwner(User user);
+    void save(User user);
 
-    User getRolFromOwner(Long id);
+    Optional<User> getRolFromUser(Long id);
 
     Optional<User> findByEmail(String email);
 
     String encodePassword(String password);
+
+    User getUseAuth();
 }
