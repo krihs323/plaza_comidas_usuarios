@@ -36,9 +36,9 @@ public class UserRestController {
             @ApiResponse(responseCode = "404", description = "Owner not found", content = @Content)
     })
     @GetMapping("/rol/id/{id}")
-    public ResponseEntity<RolResponse> getRolFromOwner(@Parameter(description = "Number of the user to be returned")
+    public ResponseEntity<RolResponse> getRolFromUser(@Parameter(description = "Number of the user to be returned")
                                                                  @PathVariable(name = "id") Long id) {
-        return ResponseEntity.ok(ownerHandler.getRolFromOwner(id));
+        return ResponseEntity.ok(ownerHandler.getRolFromUser(id));
     }
 
     @Operation(summary = "Get a rol by Email")

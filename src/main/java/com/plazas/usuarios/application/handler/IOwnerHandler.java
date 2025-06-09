@@ -8,7 +8,7 @@ public interface IOwnerHandler {
 
     void saveOwner(OwnerRequest ownerRequest);
 
-    RolResponse getRolFromOwner(Long id);
+    RolResponse getRolFromUser(Long id);
 
     void saveEmployee(OwnerRequest ownerRequest);
 

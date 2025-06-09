@@ -14,4 +14,10 @@ public class RolResponse {
     private Long idRestaurantEmployee;
 
     private String phoneNumber;
+
+    private String name;
+
+    private String lastName;
+
+
 }
