@@ -2,8 +2,6 @@ package com.plazas.usuarios.domain.api;
 
 import com.plazas.usuarios.domain.model.User;
 
-import java.util.Optional;
-
 public interface IUserServicePort {
 
     void saveOwner(User user);

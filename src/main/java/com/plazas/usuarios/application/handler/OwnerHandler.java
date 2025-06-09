@@ -31,7 +31,7 @@ public class OwnerHandler implements IOwnerHandler {
     }
 
     @Override
-    public RolResponse getRolFromOwner(Long id) {
+    public RolResponse getRolFromUser(Long id) {
         User user = userServicePort.getRolFromUser(id);
         return rolResponseMapper.toResponse(user);
     }
