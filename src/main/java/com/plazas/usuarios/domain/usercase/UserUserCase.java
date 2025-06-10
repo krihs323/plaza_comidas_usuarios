@@ -7,7 +7,6 @@ import com.plazas.usuarios.domain.model.Role;
 import com.plazas.usuarios.domain.model.User;
 import com.plazas.usuarios.domain.spi.IUserPersistencePort;
 import com.plazas.usuarios.domain.validations.UserValidations;
-//TODO manejarlos desde el dominio y no desde la infra - Ajustado
 import com.plazas.usuarios.domain.exception.UserAlreadyExistException;
 import com.plazas.usuarios.domain.exception.ExceptionResponse;
 import java.util.Optional;
@@ -23,8 +22,6 @@ public class UserUserCase implements IUserServicePort {
     @Override
     public void saveOwner(User user) {
         UserValidations.saveUser(user);
-        //TODO Del flujo de save customer no lo setea a cliente - Ajustado
-        //TODO Solo el propietario crea empleado de su empresa - Ajustado, al crear el restaurante se asocia
         user.setRole(Role.OWNER);
         user.setPassword(userPersistencePort.encodePassword(user.getPassword()));
         if (userPersistencePort.findByEmail(user.getEmail()).isPresent()) {
@@ -43,7 +40,6 @@ public class UserUserCase implements IUserServicePort {
         }
         user.setRole(Role.EMPLOYEE);
         user.setPassword(userPersistencePort.encodePassword(user.getPassword()));
-        //TODO nombramiento como solamente save - Ajustado
         User userAuth = userPersistencePort.getUseAuth();
         user.setIdRestaurantEmployee(userAuth.getIdRestaurantEmployee());
         userPersistencePort.save(user);

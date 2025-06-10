@@ -7,7 +7,6 @@ import com.plazas.usuarios.domain.exception.ExceptionResponse;
 import com.plazas.usuarios.domain.model.User;
 import com.plazas.usuarios.domain.spi.IAuthenticationPersistencePort;
 import com.plazas.usuarios.domain.spi.IUserPersistencePort;
-//TODO Manejarlo en la infraestructura - Ajustado
 import java.util.Optional;
 
 
@@ -27,7 +26,6 @@ public class AuthenticationUserCase implements IAuthenticationServicePort {
         authenticationPersistencePort.autenticate(request.getEmail(), request.getPassword());
 
         Optional<User> userFoundByEmail = userPersistencePort.findByEmail(request.getEmail());
-        //TODO Arrojar excepcion especifica como un 401 usuario no encontrado - Ajustado
         if (userFoundByEmail.isEmpty()){
             throw new AuthenticationException(ExceptionResponse.AUTHENTICATION_VALIDATION.getMessage());
         }

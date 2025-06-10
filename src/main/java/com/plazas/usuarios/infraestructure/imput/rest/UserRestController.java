@@ -98,7 +98,6 @@ public class UserRestController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    //TODO Documentacion - Ajustado
     @Operation(summary = "Login into small square system")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Loguin successful", content = @Content),

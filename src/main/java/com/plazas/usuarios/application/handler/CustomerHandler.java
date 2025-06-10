@@ -22,7 +22,6 @@ public class CustomerHandler implements ICustomerHandler {
     @Override
     public void saveCustomer(CustomerRequest customerRequest) {
         User user = customerRequestMapper.toUser(customerRequest);
-        //TODO Se maneja en el user Case - Ajustado
         userServicePort.saveCustomer(user);
     }
 }
